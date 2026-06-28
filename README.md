@@ -62,19 +62,7 @@ Para executar os testes de performance, certifique-se de que o Docker esteja em 
 Com o Docker rodando na máquina
 docker run --rm -v ${PWD}:/scripts grafana/k6 run /scripts/performance/api_load_test.js
 ```
-### Comandos:
-Para executar apenas os testes de UI e já abrir automaticamente o relatorio
-```bash
-npm run test:ui
-```
-Para executar apenas os testes de API e já abrir automaticamente o relatorio
-```bash
-npm run test:api
-```
-Para executar apenas os testes de performance com k6 via docker e já abrir automaticamente o relatorio
-```bash
-npm run test:performance
-```
+### Comando:
 Para executar todos os testes em sequencia e já abrir automaticamente o relatorio
 ```bash
 npm run test:report
