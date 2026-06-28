@@ -172,7 +172,3 @@ Este erro geralmente ocorre quando o Playwright tenta interpretar um arquivo de 
 - **`playwright.config.ts`**: O arquivo de configuração do Playwright foi ajustado para incluir `testMatch: /.*\.spec\.ts/`, garantindo que apenas arquivos com a extensão `.spec.ts` sejam reconhecidos como arquivos de teste. Além disso, a importação do `dotenv` foi alterada para `import 'dotenv/config';` para evitar possíveis conflitos de módulos.
 
 Se você encontrar este erro, certifique-se de que seu ambiente Node.js e TypeScript estão configurados corretamente e que o Playwright está usando a configuração de teste adequada.
-<<<<<<< HEAD
-=======
-
->>>>>>> d4570fdca0e21edd4196798b4fe67dfdf5f716d3
