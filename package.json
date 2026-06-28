@@ -1,0 +1,23 @@
+{
+  "name": "desafio-qa-senior",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test:ui": "npx playwright test tests/ui/",
+    "test:api": "npx playwright test tests/api/",
+    "test:performance": "docker run --rm -v D:/desafio-qa-senior:/scripts grafana/k6 run /scripts/performance/api_load_test.js",
+    "allure:generate": "allure generate allure-results --clean",
+    "allure:open": "allure open allure-report",
+    "test:report": "npm run test:ui && npm run test:api && npm run test:performance && npm run allure:generate && npm run allure:open"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@playwright/test": "^1.61.1",
+    "@types/node": "^26.0.1",
+    "allure-playwright": "^3.10.1",
+    "dotenv": "^17.4.2"
+  }
+}
