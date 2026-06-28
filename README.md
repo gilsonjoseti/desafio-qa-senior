@@ -62,11 +62,13 @@ Para executar os testes de performance, certifique-se de que o Docker esteja em 
 Com o Docker rodando na máquina
 docker run --rm -v ${PWD}:/scripts grafana/k6 run /scripts/performance/api_load_test.js
 ```
-Comandos:
+### Comandos:
+```bash
 npm run test:ui → roda só os testes de interface.
 npm run test:api → roda só os testes de API.
 npm run test:performance → executa os testes de performance com k6 via Docker.
 npm run test:report → roda UI + API + Performance, gera o relatório Allure e abre automaticamente no navegador.
+```
 
 ## 2. Tecnologias utilizadas
 
