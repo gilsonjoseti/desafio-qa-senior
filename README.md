@@ -1,9 +1,6 @@
-<<<<<<< HEAD
 # Desafio Técnico QA Sênior - Automação de Testes
 
-=======
 # Desafio QA Senior
->>>>>>> d4570fdca0e21edd4196798b4fe67dfdf5f716d3
 Este projeto demonstra a implementação de testes automatizados de UI e API, testes de performance e integração contínua (CI/CD), seguindo as melhores práticas de arquitetura e desenvolvimento de testes.
 
 ## 1. Como executar o projeto localmente
