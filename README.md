@@ -1,9 +1,6 @@
-<<<<<<< HEAD
 # Desafio Técnico QA Sênior - Automação de Testes
 
-=======
 # Desafio QA Senior
->>>>>>> d4570fdca0e21edd4196798b4fe67dfdf5f716d3
 Este projeto demonstra a implementação de testes automatizados de UI e API, testes de performance e integração contínua (CI/CD), seguindo as melhores práticas de arquitetura e desenvolvimento de testes.
 
 ## 1. Como executar o projeto localmente
@@ -65,11 +62,11 @@ Para executar os testes de performance, certifique-se de que o Docker esteja em 
 Com o Docker rodando na máquina
 docker run --rm -v ${PWD}:/scripts grafana/k6 run /scripts/performance/api_load_test.js
 ```
-Comandos:
-npm run test:ui → roda só os testes de interface.
-npm run test:api → roda só os testes de API.
-npm run test:performance → executa os testes de performance com k6 via Docker.
-npm run test:report → roda UI + API + Performance, gera o relatório Allure e abre automaticamente no navegador.
+### Comando:
+Para executar todos os testes em sequencia e já abrir automaticamente o relatorio
+```bash
+npm run test:report
+```
 
 ## 2. Tecnologias utilizadas
 
@@ -173,7 +170,3 @@ Este erro geralmente ocorre quando o Playwright tenta interpretar um arquivo de 
 - **`playwright.config.ts`**: O arquivo de configuração do Playwright foi ajustado para incluir `testMatch: /.*\.spec\.ts/`, garantindo que apenas arquivos com a extensão `.spec.ts` sejam reconhecidos como arquivos de teste. Além disso, a importação do `dotenv` foi alterada para `import 'dotenv/config';` para evitar possíveis conflitos de módulos.
 
 Se você encontrar este erro, certifique-se de que seu ambiente Node.js e TypeScript estão configurados corretamente e que o Playwright está usando a configuração de teste adequada.
-<<<<<<< HEAD
-=======
-
->>>>>>> d4570fdca0e21edd4196798b4fe67dfdf5f716d3
