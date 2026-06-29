@@ -44,9 +44,9 @@ jobs:
       - name: Generate Allure report
         run: npm run allure:generate
 
-      - name: Upload Allure report to GitHub Pages artifact
+      - name: Upload Allure report for GitHub Pages
         if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
-        uses: actions/upload-pages-artifact@v1
+        uses: actions/upload-pages-artifact@main
         with:
           path: ./allure-report
 
