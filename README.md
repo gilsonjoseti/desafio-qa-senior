@@ -155,7 +155,7 @@ Para os relatórios Allure (configurados no `playwright.config.ts`):
 
 ## 8. Possíveis melhorias
 
-- **Integração Allure no CI/CD**: Atualmente, o relatório Allure é gerado localmente. Uma melhoria seria configurar o pipeline para publicar o relatório Allure como um artefato, ou integrar com um servidor Allure para visualização centralizada.
+- **Integração Allure no CI/CD**: O pipeline agora publica o relatório Allure como um artefato do GitHub Actions em push para o branch principal. Isso facilita o acesso ao relatório gerado mesmo quando o deploy do Pages não estiver disponível, e pode ser estendido para integração com um servidor Allure centralizado.
 - **Mais cenários de Testes de Performance**: Expandir a cobertura dos testes de performance para outros endpoints e cenários mais complexos, incluindo testes de estresse e pico.
 - **Testes de Segurança**: Adicionar testes de segurança automatizados, como varreduras de vulnerabilidades ou testes de injeção de SQL/XSS.
 - **Testes de Acessibilidade**: Integrar ferramentas de acessibilidade para garantir que a aplicação seja utilizável por pessoas com deficiência.
