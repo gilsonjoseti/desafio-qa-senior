@@ -137,17 +137,17 @@ npx playwright show-report
 
 Para os relatórios Allure (configurados no `playwright.config.ts`):
 
-1. Instale o Allure Commandline (se ainda não tiver):
+1. Instale as dependências do projeto (inclui `allure-commandline`):
    ```bash
-   npm install -g allure-commandline --save-dev
+   npm install
    ```
 2. Gere o relatório Allure a partir dos resultados:
    ```bash
-   allure generate allure-results --clean -o allure-report
+   npx allure generate allure-results --clean -o allure-report
    ```
 3. Abra o relatório no navegador:
    ```bash
-   allure open allure-report
+   npx allure open allure-report
    ```
 
 ## 8. Possíveis melhorias
