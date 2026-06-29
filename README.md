@@ -145,7 +145,10 @@ Para os relatórios Allure (configurados no `playwright.config.ts`):
    ```bash
    npx allure generate allure-results --clean -o allure-report
    ```
-3. Abra o relatório no navegador:
+3. Configure o GitHub Pages na sua repo para usar o branch `gh-pages` e o diretório raiz `/`.
+   - Acesse: `https://github.com/<SEU_USUARIO>/<REPO>/settings/pages`
+   - Selecione `gh-pages` como fonte e salve.
+4. Abra o relatório no navegador:
    ```bash
    npx allure open allure-report
    ```

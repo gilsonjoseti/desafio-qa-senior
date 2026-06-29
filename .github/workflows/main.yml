@@ -44,12 +44,18 @@ jobs:
       - name: Generate Allure report
         run: npm run allure:generate
 
-      - name: Upload Allure report for GitHub Pages
-        if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
-        uses: actions/upload-pages-artifact@main
-        with:
-          path: ./allure-report
+      - name: Verify Allure report exists
+        run: test -d ./allure-report
 
       - name: Deploy Allure report to GitHub Pages
         if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
-        uses: actions/deploy-pages@v1
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./allure-report
+          publish_branch: gh-pages
+          user_name: github-actions[bot]
+          user_email: github-actions[bot]@users.noreply.github.com
+          allow_empty_commit: true
+          keep_files: false
+          force_orphan: true
