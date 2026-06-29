@@ -20,14 +20,14 @@ Certifique-se de ter os seguintes softwares instalados em sua máquina:
    cd desafio-qa-senior
    ```
 
-2. Instale as dependências do projeto:
+2. Instale as dependências do projeto (inclui `devDependencies` como `@playwright/test` e `allure-commandline`):
    ```bash
-   npm install
+   npm ci
    ```
 
-3. Instale os navegadores do Playwright:
+3. Instale os navegadores do Playwright (necessário para testes de UI no CI e local):
    ```bash
-   npx playwright install --with-deps chromium
+   npx playwright install --with-deps
    ```
 
 4. Crie um arquivo `.env` na raiz do projeto com as seguintes variáveis de ambiente:
@@ -59,14 +59,15 @@ npx playwright test tests/api/
 #### Testes de Performance (k6)
 Para executar os testes de performance, certifique-se de que o Docker esteja em execução:
 ```bash
-Com o Docker rodando na máquina
-docker run --rm -v ${PWD}:/scripts grafana/k6 run /scripts/performance/api_load_test.js
+docker run --rm -v ${PWD}:/scripts -w /scripts grafana/k6 run /scripts/performance/api_load_test.js
 ```
 ### Comando:
 Para executar todos os testes em sequencia e já abrir automaticamente o relatorio
 ```bash
 npm run test:report
 ```
+
+Observação: o script `test:performance` usa Docker; em runners de CI sem Docker a etapa será pulada ou deverá ser adaptada.
 
 ## 2. Tecnologias utilizadas
 
@@ -125,6 +126,9 @@ Para executar:
 ```bash
 docker run --rm -v ${PWD}:/scripts grafana/k6 run /scripts/performance/api_load_test.js
 ```
+```
+
+No GitHub Actions o workflow usa o mesmo comando dentro do runner quando o Docker está disponível. Caso o runner não tenha Docker, o job de performance deve ser desabilitado ou rodado em um self-hosted runner com Docker.
 
 ## 7. Como acessar os relatórios
 
@@ -139,7 +143,7 @@ Para os relatórios Allure (configurados no `playwright.config.ts`):
 
 1. Instale as dependências do projeto (inclui `allure-commandline`):
    ```bash
-   npm install
+   npm ci
    ```
 2. Gere o relatório Allure a partir dos resultados:
    ```bash
@@ -153,9 +157,20 @@ Para os relatórios Allure (configurados no `playwright.config.ts`):
    npx allure open allure-report
    ```
 
+### Download dos artefatos gerados no CI
+Se o deploy do Pages estiver indisponível, o pipeline publica o relatório Allure e os resultados do Playwright como artefatos do run. Para baixar os artefatos:
+
+1. Acesse a página do Workflow run no GitHub Actions.
+2. No painel do run, abra a seção `Artifacts` e faça o download do `allure-report` ou `playwright-results-<job>`.
+
+Exemplo de comando local para inspecionar o resultado (após baixar e descompactar):
+```bash
+npx allure open ./allure-report
+```
+
 ## 8. Possíveis melhorias
 
-- **Integração Allure no CI/CD**: O pipeline agora publica o relatório Allure como um artefato do GitHub Actions em push para o branch principal. Isso facilita o acesso ao relatório gerado mesmo quando o deploy do Pages não estiver disponível, e pode ser estendido para integração com um servidor Allure centralizado.
+- **Integração Allure no CI/CD**: O pipeline publica o relatório Allure como um artefato do GitHub Actions em push para o branch principal. Além disso, o workflow de CI atualizado (`.github/workflows/run-tests.yml`) gera o relatório Allure para o job UI e faz upload como artefato. Isso facilita o acesso ao relatório gerado mesmo quando o deploy do Pages não estiver disponível, e pode ser estendido para integração com um servidor Allure centralizado.
 - **Mais cenários de Testes de Performance**: Expandir a cobertura dos testes de performance para outros endpoints e cenários mais complexos, incluindo testes de estresse e pico.
 - **Testes de Segurança**: Adicionar testes de segurança automatizados, como varreduras de vulnerabilidades ou testes de injeção de SQL/XSS.
 - **Testes de Acessibilidade**: Integrar ferramentas de acessibilidade para garantir que a aplicação seja utilizável por pessoas com deficiência.
@@ -173,3 +188,50 @@ Este erro geralmente ocorre quando o Playwright tenta interpretar um arquivo de 
 - **`playwright.config.ts`**: O arquivo de configuração do Playwright foi ajustado para incluir `testMatch: /.*\.spec\.ts/`, garantindo que apenas arquivos com a extensão `.spec.ts` sejam reconhecidos como arquivos de teste. Além disso, a importação do `dotenv` foi alterada para `import 'dotenv/config';` para evitar possíveis conflitos de módulos.
 
 Se você encontrar este erro, certifique-se de que seu ambiente Node.js e TypeScript estão configurados corretamente e que o Playwright está usando a configuração de teste adequada.
+
+## 10. Executando na pipeline (GitHub Actions)
+
+O repositório já contém dois workflows importantes:
+
+- `.github/workflows/main.yml` — workflow principal com execução completa e deploy do relatório Allure para GitHub Pages (quando aplicável).
+- `.github/workflows/run-tests.yml` — workflow criado para rodar apenas os testes (UI e API) em paralelo via matrix, com cache de dependências, instalação de navegadores e upload de artefatos (`playwright-results-*` e `allure-report`).
+
+Para executar os testes no Actions:
+
+1. Configure os `Secrets` do repositório (Settings > Secrets > Actions):
+   - `BASE_URL` (opcional)
+   - `API_URL` (opcional)
+
+2. Suba suas alterações para o branch `main` ou abra um PR para que os workflows disparem automaticamente.
+
+3. Se preferir executar manualmente, abra a aba de Actions, selecione o workflow `Run Tests` e clique em `Run workflow` (workflow_dispatch).
+
+Observações de configuração:
+- O workflow usa `npm ci --include=dev` para garantir instalação de `devDependencies` (necessário para `@playwright/test` e `allure-commandline`).
+- O workflow faz cache do npm com `actions/cache` para acelerar instalações.
+- Se usar `peaceiris/actions-gh-pages` para deploy, verifique que o repo tem GitHub Pages habilitado e que o token possui permissões. Como alternativa, os artefatos são publicados e podem ser baixados manualmente.
+
+## 11. Comandos úteis
+
+```bash
+# Instalar dependências
+npm ci
+
+# Instalar navegadores Playwright
+npx playwright install --with-deps
+
+# Rodar testes UI
+npm run test:ui
+
+# Rodar testes API
+npm run test:api
+
+# Gerar relatório Allure localmente
+npx allure generate allure-results --clean -o allure-report
+npx allure open allure-report
+
+# Teste de performance local (Docker)
+docker run --rm -v ${PWD}:/scripts -w /scripts grafana/k6 run /scripts/performance/api_load_test.js
+```
+
+Se precisar, eu ajusto o README com o link do workflow run ou instruções adicionais para o seu fluxo de revisão.
