@@ -5,7 +5,7 @@
   "scripts": {
     "test:ui": "npx playwright test tests/ui/",
     "test:api": "npx playwright test tests/api/",
-    "test:performance": "docker run --rm -v D:/desafio-qa-senior:/scripts grafana/k6 run /scripts/performance/api_load_test.js",
+    "test:performance": "docker run --rm -v \"${PWD}:/scripts\" -w /scripts grafana/k6 run /scripts/performance/api_load_test.js",
     "allure:generate": "npx allure generate allure-results --clean",
     "allure:open": "npx allure open allure-report",
     "test:report": "npm run test:ui && npm run test:api && npm run test:performance && npm run allure:generate && npm run allure:open"

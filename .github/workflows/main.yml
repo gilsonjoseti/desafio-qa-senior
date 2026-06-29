@@ -31,7 +31,9 @@ jobs:
         run: npm run test:api
 
       - name: Run Performance tests
-        run: docker run --rm -v "${{ github.workspace }}:/scripts" -w /scripts grafana/k6 run performance/api_load_test.js
+        shell: bash
+        run: |
+          docker run --rm -v "${GITHUB_WORKSPACE}:/scripts" -w /scripts grafana/k6 run /scripts/performance/api_load_test.js
 
       - name: Generate Allure report
         run: npm run allure:generate
