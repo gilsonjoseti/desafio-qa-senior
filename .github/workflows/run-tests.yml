@@ -1,0 +1,70 @@
+name: Run Tests
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        job: [ui, api]
+    env:
+      BASE_URL: ${{ secrets.BASE_URL }}
+      API_URL: ${{ secrets.API_URL }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: true
+
+      - name: Cache node modules
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: 'npm'
+
+      - name: Install deps (dev)
+        run: npm ci --include=dev
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
+
+      - name: Run UI tests
+        if: matrix.job == 'ui'
+        run: npm run test:ui
+
+      - name: Run API tests
+        if: matrix.job == 'api'
+        run: npm run test:api
+
+      - name: Collect Playwright results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-results-${{ matrix.job }}
+          path: test-results
+
+      - name: Generate Allure report (UI)
+        if: matrix.job == 'ui' && success()
+        run: npx allure generate allure-results -o allure-report --clean
+
+      - name: Upload Allure artifact (UI)
+        if: matrix.job == 'ui' && always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-report
+          path: allure-report
